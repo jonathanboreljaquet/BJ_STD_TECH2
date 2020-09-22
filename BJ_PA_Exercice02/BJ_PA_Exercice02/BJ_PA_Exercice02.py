@@ -1,7 +1,8 @@
 import struct
 import os
+from tinytag import TinyTag
 
-FILENAME = "01 Dreams for Sale (feat_ Dr_ Tingle Fingers).mp3"
+FILENAME = "song.mp3"
 
 def unsynchsafe(num):
         out = 0
@@ -34,7 +35,7 @@ def humanbytes(B):
 def main():
     file = open(FILENAME, "rb")
     data = file.read()
-
+    tag = TinyTag.get(FILENAME)
     # Read the file type
     file_type = data[:0x3].decode("utf-8")
     print(f"Signature du fichier : {file_type}")
@@ -56,7 +57,10 @@ def main():
     # Read the file album
     file_album = data[0x0F:0x4B].decode("utf-8")
     print(f"nom de l'album du fichier : {file_album}")
-
+    print("-----------------------------------------------------------")
+    print("tinytag")
+    print(tag.album)
+    print(tag.artist)
     # Read the file year partition
     # file_year_parution = data[0x93:0x97].decode("utf-8")
     # print(f"Année de parution du fichier : {file_year_parution}")
