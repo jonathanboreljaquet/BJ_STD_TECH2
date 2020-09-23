@@ -4,55 +4,31 @@
 
 import struct
 import os
-filename = "invert.bmp"
+filename = "logo_sav.bmp"
 file = open(filename,"rb")
+newfile = open("invert.bmp","wb")
 data = file.read()
+file_signature = data[:2].decode("utf-8")
+file_size = int.from_bytes(data[2:5],"little")
+file_header_size = int.from_bytes(data[14:18],"little")
+file_width_pixel = int.from_bytes(data[18:22],"little")
+file_height_pixel = int.from_bytes(data[22:26],"little")
+file_nbr_bits_per_pixel = int.from_bytes(data[28:30],"little")
+file_image_size = int.from_bytes(data[34:38],"little")
 
-#Read the file type
-file_type = data[:0x02].decode("utf-8")
-print(f"Signature du fichier : {file_type}")
-
-#Read the the total size of the file in bytes
-file_size = int.from_bytes(data[0x02:0x06],"little")
+print(f"Signature du fichier : {file_signature}")
 print(f"Taille totale du fichier en octets : {file_size}")
+print(f"Taille en-tête du fichier en octets : {file_header_size}")
+print(f"Largeur image : {file_width_pixel}")
+print(f"Hauteur image : {file_height_pixel}")
+print(f"Nombre de bits par pixel : {file_nbr_bits_per_pixel}")
+print(f"Taille en octets des données de l’image : {file_image_size}")
 
-#Read the width image
-file_width = int.from_bytes(data[0x12:0x16],"little")
-print(f"Largeur image : {file_width}")
+dst_data_lst = list(data)
+for x in range(file_header_size,file_size):
+    dst_data_lst[x] = 255 - data[x]
+    pass
 
-#Read the height image
-file_height = int.from_bytes(data[0x12:0x16],"little")
-print(f"Hauteur image : {file_height}")
-
-#Read the number of bits per pixel
-file_nbr_pixel = int.from_bytes(data[0x1C:0x1E],"little")
-print(f"Nombre de bits par pixel : {file_nbr_pixel}")
-
-#Read the number of bits per pixel
-file_size_img = int.from_bytes(data[0x22:0x26],"little")
-print(f"Taille en octets des données de l’image : {file_size_img}")
-
-#invert color of the image
-newfile = open("revert.bmp","wb")
-newfile.write(data[:0x36])
-
-for i in range(0x37,file_size,3):
-	blue = int.from_bytes(data[i:i + 1],"little")
-	green = int.from_bytes(data[i + 1:i + 2],"little")
-	red = int.from_bytes(data[i + 2:i + 3],"little")
-	
-	new_blue = 255 - blue
-	new_green = 255 - green
-	new_red = 255 - red
-	new_rgb_pixel = new_blue+new_green+new_red
-	newfile.write(new_rgb_pixel.to_bytes(file_nbr_pixel, 'little'))
-
-file.close()
-newfile.close()
-	
-
-
-
-
-
-
+for x in dst_data_lst:
+    newfile.write(x.to_bytes(1, 'little'))
+    pass
