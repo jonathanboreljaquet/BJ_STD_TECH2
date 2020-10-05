@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>b5cf9cd2-7fb7-4d60-8e91-67773602413c</ProjectGuid>
+    <ProjectGuid>a42fea70-fca4-48cc-9e82-76a00693f745</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>BJ_PA_Exercice01.py</StartupFile>
+    <StartupFile>BJ_PA_MP3_correction.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>BJ_PA_Exercice01</Name>
-    <RootNamespace>BJ_PA_Exercice01</RootNamespace>
+    <Name>BJ_PA_MP3_correction</Name>
+    <RootNamespace>BJ_PA_MP3_correction</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,10 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BJ_PA_Exercice01.py" />
-    <Compile Include="correction.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="BJ_PA_MP3_correction.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
