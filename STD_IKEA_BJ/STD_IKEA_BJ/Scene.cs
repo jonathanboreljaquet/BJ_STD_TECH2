@@ -5,6 +5,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,9 +14,9 @@ namespace STD_IKEA_BJ
 {
     class Scene : Control
     {
-        private const int FPS = 60;
+        private const int FPS = 120;
         private const int NUMBER_OF_CHECKOUT = 10;
-        private const int MAX_CLIENT_IN_SHOP = 50;
+        private const int MAX_CLIENT_IN_SHOP = 10;
         private Bitmap bitmap = null;
         private Graphics graphics = null;
         private Timer timer;
@@ -23,9 +24,15 @@ namespace STD_IKEA_BJ
         private Client client;
         private Random random;
         private int tick;
+        private int nbrClient;
+        private List<Checkout> lstCheckout;
+        private List<Client> lstClient;
 
-        public Scene() :base()
+        public Scene() : base()
         {
+            lstCheckout = new List<Checkout>();
+            lstClient = new List<Client>();
+            random = new Random();
             DoubleBuffered = true;
             timer = new Timer
             {
@@ -36,24 +43,25 @@ namespace STD_IKEA_BJ
             int x = 50;
             for (int i = 0; i < NUMBER_OF_CHECKOUT; i++)
             {
-                checkout = new Checkout(new Point(x, 500));
+                checkout = new Checkout(new Vector2(x, 500));
                 Paint += checkout.Paint;
+                lstCheckout.Add(checkout);
                 x += 60;
             }
-            random = new Random();
-
-
+            lstCheckout[0].OpenCheckout();
 
         }
 
         private void T_Tick(object sender, EventArgs e)
         {
-            
-            if (tick%50==0)
+
+            if (tick % 50 == 0 && nbrClient < MAX_CLIENT_IN_SHOP)
             {
-                PointF speed = new PointF(random.Next(50, 150), random.Next(50, 150));
-                client = new Client(new PointF(0, 0), speed, Color.White, this);
+                Vector2 speed = new Vector2(random.Next(50, 150), random.Next(50, 150));
+                client = new Client(new Vector2(0, 0), speed, Color.White, this, new Size(40, 40));
                 Paint += client.Paint;
+                lstClient.Add(client);
+                nbrClient++;
             }
             tick += 1;
             Invalidate();
@@ -68,7 +76,7 @@ namespace STD_IKEA_BJ
             PaintEventArgs p = new PaintEventArgs(graphics, e.ClipRectangle);
             p.Graphics.Clear(BackColor);
             base.OnPaint(p);
-            e.Graphics.DrawImage(bitmap, new Point(0, 0));
+            e.Graphics.DrawImage(bitmap, new System.Drawing.Point(0, 0));
         }
     }
 }

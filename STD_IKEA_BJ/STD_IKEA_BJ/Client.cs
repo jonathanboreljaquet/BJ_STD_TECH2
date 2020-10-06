@@ -1,50 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 using System.Windows.Forms;
 
 namespace STD_IKEA_BJ
 {
     class Client
     {
-        private float elapsedTime;
-        private PointF startPosition;
-        private PointF speed;
+        private const int NO_SPEED_Y = 0;
+        private Vector2 startPosition;
+        private Vector2 actualPosition;
+        private Vector2 speed;
         private Color color;
         private Scene scene;
+        private Size size;
         private readonly Stopwatch sw;
+        private bool isColliding;
 
-        private PointF Location
+        private Vector2 Location
         {
             get
             {
-                PointF newLocation;
-                elapsedTime = sw.ElapsedMilliseconds / 1000f;
-                newLocation = new PointF(startPosition.X + elapsedTime * speed.X, startPosition.Y + elapsedTime * speed.Y);
-                if (newLocation.X-40>scene.Width)
+                float elapsedTime = sw.ElapsedMilliseconds / 1000f;
+                Vector2 actualPosition = startPosition + elapsedTime * speed;
+                //Checking that the collision trigger not multiple times
+                bool oldColliding = isColliding;
+                isColliding = (actualPosition.X + size.Width >= scene.Width || actualPosition.X <= 0 || actualPosition.Y + size.Height >= scene.Height || actualPosition.Y <= 0);
+                if ((actualPosition.X + size.Width >= scene.Width || actualPosition.X <= 0) && !oldColliding && isColliding)
                 {
-                    newLocation = new PointF(startPosition.X + elapsedTime * (speed.X*-1), startPosition.Y + elapsedTime * speed.Y);
+                    startPosition = actualPosition;
+                    speed.X = -speed.X;
+                    sw.Restart();
                 }
-                return newLocation;
+                if ((actualPosition.Y + size.Height >= scene.Height || actualPosition.Y <= 0) && !oldColliding && isColliding)
+                {
+                    startPosition = actualPosition;
+                    speed.Y = -speed.Y;
+                    sw.Restart();
+                }
+                return actualPosition;
             }
-
         }
-        public Client(PointF startPosition, PointF speed, Color color, Scene scene)
+        public Client(Vector2 startPosition, Vector2 speed, Color color, Scene scene, Size size)
         {
             this.startPosition = startPosition;
             this.speed = speed;
             this.color = color;
             this.scene = scene;
+            this.size = size;
             sw = new Stopwatch();
             sw.Start();
         }
         public void Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.FillEllipse(new SolidBrush(color), new Rectangle(Point.Round(Location), new Size(40, 40)));
+            e.Graphics.FillEllipse(new SolidBrush(color), new Rectangle(Point.Round(Location.ToPointF()), size));
 
         }
     }
