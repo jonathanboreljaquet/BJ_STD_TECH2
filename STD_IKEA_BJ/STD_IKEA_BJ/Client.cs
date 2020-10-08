@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace STD_IKEA_BJ
 {
@@ -15,6 +17,8 @@ namespace STD_IKEA_BJ
         private Scene scene;
         private Size size;
         private readonly Stopwatch sw;
+        private bool isInCheckout;
+        public bool IsInCheckout { get => isInCheckout; private set => isInCheckout = value; }
         private bool isColliding;
 
         private Vector2 Location
@@ -22,7 +26,7 @@ namespace STD_IKEA_BJ
             get
             {
                 float elapsedTime = sw.ElapsedMilliseconds / 1000f;
-                Vector2 actualPosition = startPosition + elapsedTime * speed;
+                actualPosition = startPosition + elapsedTime * speed;
                 //Checking that the collision trigger not multiple times
                 bool oldColliding = isColliding;
                 isColliding = (actualPosition.X + size.Width >= scene.Width || actualPosition.X <= 0 || actualPosition.Y + size.Height >= scene.Height || actualPosition.Y <= 0);
@@ -41,6 +45,7 @@ namespace STD_IKEA_BJ
                 return actualPosition;
             }
         }
+
         public Client(Vector2 startPosition, Vector2 speed, Color color, Scene scene, Size size)
         {
             this.startPosition = startPosition;
@@ -51,10 +56,39 @@ namespace STD_IKEA_BJ
             sw = new Stopwatch();
             sw.Start();
         }
+        public void Move(Vector2 destination)
+        {
+            startPosition = actualPosition;
+            float diffx = actualPosition.X - destination.X;
+            float diffy = actualPosition.Y - destination.Y;
+            speed = new Vector2(diffx*-1, diffy*-1);
+            isInCheckout = true;
+            sw.Restart();
+        }
         public void Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.FillEllipse(new SolidBrush(color), new Rectangle(Point.Round(Location.ToPointF()), size));
 
+        }
+        public void Tick(object sender,EventArgs e)
+        {
+            foreach (Checkout checkout in scene.LstCheckout)
+            {
+                if (checkout.IsOpen && !checkout.IsFull)
+                {
+                    if (!IsInCheckout)
+                    {
+                        checkout.AddClientToQueue(this);
+                    }
+                }
+                if (IsInCheckout & actualPosition == checkout.Position)
+                {
+                    startPosition = actualPosition;
+                    speed = new Vector2(0);
+                    sw.Restart();
+                }
+            }
+            
         }
     }
 }

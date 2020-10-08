@@ -16,7 +16,7 @@ namespace STD_IKEA_BJ
     {
         private const int FPS = 120;
         private const int NUMBER_OF_CHECKOUT = 10;
-        private const int MAX_CLIENT_IN_SHOP = 10;
+        private const int MAX_CLIENT_IN_SHOP = 7;
         private Bitmap bitmap = null;
         private Graphics graphics = null;
         private Timer timer;
@@ -27,6 +27,9 @@ namespace STD_IKEA_BJ
         private int nbrClient;
         private List<Checkout> lstCheckout;
         private List<Client> lstClient;
+
+        internal List<Checkout> LstCheckout { get => lstCheckout; set => lstCheckout = value; }
+        internal List<Client> LstClient { get => lstClient; set => lstClient = value; }
 
         public Scene() : base()
         {
@@ -48,7 +51,7 @@ namespace STD_IKEA_BJ
                 lstCheckout.Add(checkout);
                 x += 60;
             }
-            lstCheckout[0].OpenCheckout();
+            lstCheckout[9].OpenCheckout();
 
         }
 
@@ -60,6 +63,7 @@ namespace STD_IKEA_BJ
                 Vector2 speed = new Vector2(random.Next(50, 150), random.Next(50, 150));
                 client = new Client(new Vector2(0, 0), speed, Color.White, this, new Size(40, 40));
                 Paint += client.Paint;
+                timer.Tick += client.Tick;
                 lstClient.Add(client);
                 nbrClient++;
             }
@@ -76,7 +80,7 @@ namespace STD_IKEA_BJ
             PaintEventArgs p = new PaintEventArgs(graphics, e.ClipRectangle);
             p.Graphics.Clear(BackColor);
             base.OnPaint(p);
-            e.Graphics.DrawImage(bitmap, new System.Drawing.Point(0, 0));
+            e.Graphics.DrawImage(bitmap, new Point(0, 0));
         }
     }
 }
