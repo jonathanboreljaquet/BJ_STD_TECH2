@@ -52,11 +52,17 @@
   <ItemGroup>
     <Compile Include="Checkout.cs" />
     <Compile Include="Client.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="frmIkea.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="frmIkea.Designer.cs">
+      <DependentUpon>frmIkea.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MagasinInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MagasinInfo.Designer.cs">
+      <DependentUpon>MagasinInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Parameter.cs" />
     <Compile Include="Program.cs" />
@@ -65,8 +71,11 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="VectorExtensions.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="frmIkea.resx">
+      <DependentUpon>frmIkea.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MagasinInfo.resx">
+      <DependentUpon>MagasinInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -1,6 +1,6 @@
 ﻿namespace STD_IKEA_BJ
 {
-    partial class Form1
+    partial class frmIkea
     {
         /// <summary>
         /// Variable nécessaire au concepteur.
@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.scene1 = new STD_IKEA_BJ.Scene();
+            this.magasinInfo1 = new STD_IKEA_BJ.MagasinInfo();
             this.SuspendLayout();
             // 
             // scene1
@@ -40,13 +41,22 @@
             this.scene1.TabIndex = 0;
             this.scene1.Text = "scene1";
             // 
-            // Form1
+            // magasinInfo1
+            // 
+            this.magasinInfo1.Location = new System.Drawing.Point(726, 424);
+            this.magasinInfo1.Name = "magasinInfo1";
+            this.magasinInfo1.Scene = this.scene1;
+            this.magasinInfo1.Size = new System.Drawing.Size(220, 150);
+            this.magasinInfo1.TabIndex = 1;
+            // 
+            // frmIkea
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(975, 602);
+            this.Controls.Add(this.magasinInfo1);
             this.Controls.Add(this.scene1);
-            this.Name = "Form1";
+            this.Name = "frmIkea";
             this.Text = "IKEA";
             this.ResumeLayout(false);
 
@@ -55,6 +65,7 @@
         #endregion
 
         private Scene scene1;
+        private MagasinInfo magasinInfo1;
     }
 }
 

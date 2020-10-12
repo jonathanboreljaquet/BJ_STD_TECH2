@@ -18,8 +18,11 @@ namespace STD_IKEA_BJ
         private Size size;
         private readonly Stopwatch sw;
         private bool isInCheckout;
-        public bool IsInCheckout { get => isInCheckout; private set => isInCheckout = value; }
         private bool isColliding;
+        public bool IsInCheckout { get => isInCheckout; private set => isInCheckout = value; }
+        public Size Size { get => size; private set => size = value; }
+        public Vector2 ActualPosition { get => actualPosition; private set => actualPosition = value; }
+        
 
         private Vector2 Location
         {
@@ -61,8 +64,14 @@ namespace STD_IKEA_BJ
             startPosition = actualPosition;
             float diffx = actualPosition.X - destination.X;
             float diffy = actualPosition.Y - destination.Y;
-            speed = new Vector2(diffx*-1, diffy*-1);
+            speed = new Vector2(diffx * -1, diffy * -1);
             isInCheckout = true;
+            sw.Restart();
+        }
+        public void Stop()
+        {
+            startPosition = actualPosition;
+            speed = new Vector2(0, 0);
             sw.Restart();
         }
         public void Paint(object sender, PaintEventArgs e)
@@ -70,7 +79,7 @@ namespace STD_IKEA_BJ
             e.Graphics.FillEllipse(new SolidBrush(color), new Rectangle(Point.Round(Location.ToPointF()), size));
 
         }
-        public void Tick(object sender,EventArgs e)
+        public void Tick(object sender, EventArgs e)
         {
             foreach (Checkout checkout in scene.LstCheckout)
             {
@@ -81,14 +90,8 @@ namespace STD_IKEA_BJ
                         checkout.AddClientToQueue(this);
                     }
                 }
-                if (IsInCheckout & actualPosition == checkout.Position)
-                {
-                    startPosition = actualPosition;
-                    speed = new Vector2(0);
-                    sw.Restart();
-                }
             }
-            
+
         }
     }
 }

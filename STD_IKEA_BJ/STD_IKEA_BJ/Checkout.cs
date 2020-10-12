@@ -8,15 +8,15 @@ namespace STD_IKEA_BJ
 {
     class Checkout
     {
-        const int MAX_NUMBER_OF_CLIENT = 5;
-        private const int START_ELPAPSED_TIME = 20;
-        private const int DEFAULT_TIME_PROCESS = 20;
+        const int MAX_NUMBER_OF_CLIENT = 3;
+        private const int START_ELPAPSED_TIME = 5;
         private Vector2 position;
         private List<Client> lstClient;
         private Timer timer;
         private int timeElapsed;
         private string label;
         private Color color;
+        private float queuePositionY;
         public bool IsOpen { get; private set; }
         public bool IsFull { get; private set; }
         public Vector2 Position { get => position; private set => position = value; }
@@ -32,9 +32,10 @@ namespace STD_IKEA_BJ
             };
             timer.Tick += T_Tick;
             this.position = position;
+            this.queuePositionY = position.Y;
             label = "-";
             color = Color.Red;
-            timeElapsed = DEFAULT_TIME_PROCESS;
+            timeElapsed = START_ELPAPSED_TIME;
         }
 
         private void T_Tick(object sender, EventArgs e)
@@ -45,6 +46,7 @@ namespace STD_IKEA_BJ
                 if (timeElapsed < 0)
                 {
                     timeElapsed = START_ELPAPSED_TIME;
+                    RemoveClient();
                 }
                 label = timeElapsed.ToString();
             }
@@ -66,8 +68,36 @@ namespace STD_IKEA_BJ
             }
             
         }
+        public void RemoveClient()
+        {
+            queuePositionY = position.Y;
+            lstClient.RemoveAt(0);
+            foreach (Client client in lstClient)
+            {
+                Vector2 queuePosition = new Vector2(position.X, queuePositionY);
+                client.Move(queuePosition);
+                queuePositionY -= client.Size.Height;
+                IsFull = false;
+            }
+        }
+        public void Tick(object sender, EventArgs e)
+        {
+            foreach (Client client in lstClient)
+            {
+                if (!client.IsInCheckout)
+                {
+                    Vector2 queuePosition = new Vector2(position.X,queuePositionY);
+                    client.Move(queuePosition);
+                    queuePositionY -= client.Size.Height;
+                }
+                if (client.ActualPosition.X>position.X && client.ActualPosition.Y>queuePositionY)
+                {
+                    client.Stop();
+                }
+            }
+        }
 
-        public void Paint(object sender, PaintEventArgs e)
+            public void Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.FillRectangle(new SolidBrush(color), new Rectangle(Point.Round(position.ToPointF()), new Size(50, 50)));
             e.Graphics.DrawString(label, new Font("arial", 11F), Brushes.Black, (float)position.X, (float)position.Y);

@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace STD_IKEA_BJ
 {
-    public partial class Form1 : Form
+    public partial class frmIkea : Form
     {
-        public Form1()
+        public frmIkea()
         {
             InitializeComponent();
         }
