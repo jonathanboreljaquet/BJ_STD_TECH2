@@ -13,3 +13,7 @@
 * Création de l'user control MagasinInfo pour : 
   * Affichage du nombre de caisse ouvert
   * Affichage du temps avant ouverture
+## 19.10.2020
+* Déplacement des clients dans la file d'attente
+* Désaffichage des clients une fois pris en charge 
+* Création des constantes de la scene
