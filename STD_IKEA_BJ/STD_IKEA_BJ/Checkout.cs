@@ -6,25 +6,26 @@ using System.Windows.Forms;
 
 namespace STD_IKEA_BJ
 {
+
     class Checkout
     {
         const int MAX_NUMBER_OF_CLIENT = 3;
         private const int START_ELPAPSED_TIME = 5;
         private Vector2 position;
-        private List<Client> lstClient;
+        private Size size;
+        private float actualQueuePositionY;
+        private Scene scene;
         private Timer timer;
         private int timeElapsed;
         private string label;
         private Color color;
-        private float queuePositionY;
         public bool IsOpen { get; private set; }
         public bool IsFull { get; private set; }
-        public Vector2 Position { get => position; private set => position = value; }
-        internal List<Client> LstClient { get => lstClient; private set => lstClient = value; }
+        internal List<Client> LstClient { get; private set; }
 
-        public Checkout(Vector2 position)
+        public Checkout(Vector2 position,Size size, Scene scene)
         {
-            lstClient = new List<Client>();
+            LstClient = new List<Client>();
             timer = new Timer
             {
                 Interval = 1000,
@@ -32,7 +33,9 @@ namespace STD_IKEA_BJ
             };
             timer.Tick += T_Tick;
             this.position = position;
-            this.queuePositionY = position.Y;
+            this.size = size;
+            this.actualQueuePositionY = position.Y;
+            this.scene = scene;
             label = "-";
             color = Color.Red;
             timeElapsed = START_ELPAPSED_TIME;
@@ -58,48 +61,48 @@ namespace STD_IKEA_BJ
         }
         public void AddClientToQueue(Client client)
         {
-            if (lstClient.Count < MAX_NUMBER_OF_CLIENT)
+            if (LstClient.Count < MAX_NUMBER_OF_CLIENT)
             {
-                lstClient.Add(client);
+                LstClient.Add(client);
             }
             else
             {
                 IsFull = true;
             }
-            
+
         }
         public void RemoveClient()
         {
-            queuePositionY = position.Y;
-            lstClient.RemoveAt(0);
-            foreach (Client client in lstClient)
+            actualQueuePositionY = position.Y;
+            LstClient[0].IsPainting = false;
+            LstClient[0] = null;
+            scene.LstClient[0] = null;
+            scene.LstClient.Remove(LstClient[0]);
+            LstClient.Remove(LstClient[0]);
+            foreach (Client client in LstClient)
             {
-                Vector2 queuePosition = new Vector2(position.X, queuePositionY);
+                Vector2 queuePosition = new Vector2(position.X, actualQueuePositionY);
                 client.Move(queuePosition);
-                queuePositionY -= client.Size.Height;
+                actualQueuePositionY -= client.Size.Height;
                 IsFull = false;
             }
         }
         public void Tick(object sender, EventArgs e)
         {
-            foreach (Client client in lstClient)
+            foreach (Client client in LstClient)
             {
                 if (!client.IsInCheckout)
                 {
-                    Vector2 queuePosition = new Vector2(position.X,queuePositionY);
+                    Vector2 queuePosition = new Vector2(position.X, actualQueuePositionY);
                     client.Move(queuePosition);
-                    queuePositionY -= client.Size.Height;
-                }
-                if (client.ActualPosition.X>position.X && client.ActualPosition.Y>queuePositionY)
-                {
-                    client.Stop();
+                    actualQueuePositionY -= client.Size.Height;
                 }
             }
         }
 
-            public void Paint(object sender, PaintEventArgs e)
+        public void Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.FillRectangle(new SolidBrush(color), new Rectangle(Point.Round(position.ToPointF()), new Size(50, 50)));
+            e.Graphics.FillRectangle(new SolidBrush(color), new Rectangle(Point.Round(position.ToPointF()), size));
             e.Graphics.DrawString(label, new Font("arial", 11F), Brushes.Black, (float)position.X, (float)position.Y);
         }
     }

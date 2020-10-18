@@ -12,17 +12,20 @@ namespace STD_IKEA_BJ
         private const int NO_SPEED_Y = 0;
         private Vector2 startPosition;
         private Vector2 actualPosition;
+        private Vector2 futurPosition;
         private Vector2 speed;
         private Color color;
         private Scene scene;
         private Size size;
         private readonly Stopwatch sw;
-        private bool isInCheckout;
         private bool isColliding;
-        public bool IsInCheckout { get => isInCheckout; private set => isInCheckout = value; }
+
+        public bool IsInCheckout { get; private set; }
+        public bool IsPainting { get; set; }
+
         public Size Size { get => size; private set => size = value; }
         public Vector2 ActualPosition { get => actualPosition; private set => actualPosition = value; }
-        
+
 
         private Vector2 Location
         {
@@ -49,23 +52,27 @@ namespace STD_IKEA_BJ
             }
         }
 
-        public Client(Vector2 startPosition, Vector2 speed, Color color, Scene scene, Size size)
+
+        public Client(Vector2 startPosition, Vector2 futurPosition, Vector2 speed, Color color, Size size, Scene scene)
         {
             this.startPosition = startPosition;
+            this.futurPosition = futurPosition;
             this.speed = speed;
             this.color = color;
-            this.scene = scene;
             this.size = size;
+            this.scene = scene;
+            IsPainting = true;
             sw = new Stopwatch();
             sw.Start();
         }
         public void Move(Vector2 destination)
         {
+            futurPosition = destination;
             startPosition = actualPosition;
-            float diffx = actualPosition.X - destination.X;
-            float diffy = actualPosition.Y - destination.Y;
+            float diffx = actualPosition.X - futurPosition.X;
+            float diffy = actualPosition.Y - futurPosition.Y;
             speed = new Vector2(diffx * -1, diffy * -1);
-            isInCheckout = true;
+            IsInCheckout = true;
             sw.Restart();
         }
         public void Stop()
@@ -76,9 +83,13 @@ namespace STD_IKEA_BJ
         }
         public void Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.FillEllipse(new SolidBrush(color), new Rectangle(Point.Round(Location.ToPointF()), size));
+            if (IsPainting)
+            {
+                e.Graphics.FillEllipse(new SolidBrush(color), new Rectangle(Point.Round(Location.ToPointF()), size));
+            }
 
         }
+        private int cpt = 0;
         public void Tick(object sender, EventArgs e)
         {
             foreach (Checkout checkout in scene.LstCheckout)
@@ -91,7 +102,16 @@ namespace STD_IKEA_BJ
                     }
                 }
             }
+            if (actualPosition.Y > futurPosition.Y && actualPosition.X>futurPosition.X)
+            {
+                Stop();
+                Console.WriteLine("Test"+cpt.ToString());
+                cpt++;
+            }
 
         }
+        
+
+
     }
 }
