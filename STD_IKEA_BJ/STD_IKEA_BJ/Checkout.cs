@@ -9,14 +9,14 @@ namespace STD_IKEA_BJ
 
     class Checkout
     {
-        const int MAX_NUMBER_OF_CLIENT = 3;
-        private const int START_ELPAPSED_TIME = 5;
+        const int MAX_NUMBER_OF_CLIENT = 5;
+        private const int START_TIME_BEFORE_PROCESS = 10;
         private Vector2 position;
         private Size size;
         private float actualQueuePositionY;
         private Scene scene;
         private Timer timer;
-        private int timeElapsed;
+        private int timeBeforeProcess;
         private string label;
         private Color color;
         public bool IsOpen { get; private set; }
@@ -38,20 +38,20 @@ namespace STD_IKEA_BJ
             this.scene = scene;
             label = "-";
             color = Color.Red;
-            timeElapsed = START_ELPAPSED_TIME;
+            timeBeforeProcess = START_TIME_BEFORE_PROCESS;
         }
 
         private void T_Tick(object sender, EventArgs e)
         {
             if (IsOpen)
             {
-                timeElapsed -= 1;
-                if (timeElapsed < 0)
+                timeBeforeProcess -= 1;
+                if (timeBeforeProcess == 0)
                 {
-                    timeElapsed = START_ELPAPSED_TIME;
-                    RemoveClient();
+                    timeBeforeProcess = START_TIME_BEFORE_PROCESS;
+                    RemoveFirstClient();
                 }
-                label = timeElapsed.ToString();
+                label = timeBeforeProcess.ToString();
             }
         }
         public void OpenCheckout()
@@ -71,7 +71,7 @@ namespace STD_IKEA_BJ
             }
 
         }
-        public void RemoveClient()
+        public void RemoveFirstClient()
         {
             actualQueuePositionY = position.Y;
             LstClient[0].IsPainting = false;

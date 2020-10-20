@@ -13,9 +13,21 @@ namespace STD_IKEA_BJ
     public partial class MagasinInfo : UserControl
     {
         public Scene Scene { get; set; }
+        private Timer timerDisplay;
         public MagasinInfo()
         {    
             InitializeComponent();
+            timerDisplay = new Timer
+            {
+                Interval = 1000,
+                Enabled = true
+            };
+            timerDisplay.Tick += Display_Tick;
+        }
+
+        private void Display_Tick(object sender, EventArgs e)
+        {
+            Invalidate();
         }
 
         private void MagasinInfo_Paint(object sender, PaintEventArgs e)
@@ -23,7 +35,8 @@ namespace STD_IKEA_BJ
             if (Scene!=null)
             {
                 lblNbrCheckoutOpen.Text = Scene.LstCheckout.Count(n => n.IsOpen == true).ToString()+"/"+Scene.LstCheckout.Count.ToString() ;
-
+                lblTimeCheckoutVerifier.Text = Scene.TimeCheckoutVerifier.ToString();
+                lblNumberOfClientsInShop.Text = Scene.LstClient.Count.ToString();
             }
         }
     }

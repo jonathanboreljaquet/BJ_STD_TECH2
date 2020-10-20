@@ -9,7 +9,6 @@ namespace STD_IKEA_BJ
 {
     class Client
     {
-        private const int NO_SPEED_Y = 0;
         private Vector2 startPosition;
         private Vector2 actualPosition;
         private Vector2 futurPosition;
@@ -19,14 +18,21 @@ namespace STD_IKEA_BJ
         private Size size;
         private readonly Stopwatch sw;
         private bool isColliding;
+        private Timer timerPurchase;
+        private int timePurchase;
+        private Random rdm;
+        private ClientStatus status;
 
         public bool IsInCheckout { get; private set; }
         public bool IsPainting { get; set; }
-
         public Size Size { get => size; private set => size = value; }
         public Vector2 ActualPosition { get => actualPosition; private set => actualPosition = value; }
-
-
+        private enum ClientStatus
+        {
+            Walking = 0,
+            WaitingQueue = 1,
+            InQueue = 2
+        }
         private Vector2 Location
         {
             get
@@ -53,18 +59,49 @@ namespace STD_IKEA_BJ
         }
 
 
-        public Client(Vector2 startPosition, Vector2 futurPosition, Vector2 speed, Color color, Size size, Scene scene)
+        public Client(Vector2 startPosition, Vector2 futurPosition, Vector2 speed, Size size, Scene scene)
         {
             this.startPosition = startPosition;
             this.futurPosition = futurPosition;
             this.speed = speed;
-            this.color = color;
             this.size = size;
             this.scene = scene;
             IsPainting = true;
             sw = new Stopwatch();
             sw.Start();
+            timerPurchase = new Timer
+            {
+                Interval = 1000,
+                Enabled = true
+            };
+            timerPurchase.Tick += BuyingTime_Tick;
+            rdm = new Random();
+            timePurchase = rdm.Next(10, 30);
+            status = ClientStatus.Walking;
         }
+
+        private void BuyingTime_Tick(object sender, EventArgs e)
+        {
+            timePurchase -= 1;
+            if (timePurchase == 0 || status == ClientStatus.WaitingQueue)
+            {
+                status = ClientStatus.WaitingQueue;
+                foreach (Checkout checkout in scene.LstCheckout)
+                {
+                    if (checkout.IsOpen && !checkout.IsFull)
+                    {
+                        if (!IsInCheckout)
+                        {
+                            status = ClientStatus.InQueue;
+                            checkout.AddClientToQueue(this);
+                        }
+                    }
+                }
+                timerPurchase.Enabled = false;
+            }
+            
+        }
+
         public void Move(Vector2 destination)
         {
             futurPosition = destination;
@@ -86,31 +123,36 @@ namespace STD_IKEA_BJ
             if (IsPainting)
             {
                 e.Graphics.FillEllipse(new SolidBrush(color), new Rectangle(Point.Round(Location.ToPointF()), size));
-            }
-
-        }
-        private int cpt = 0;
-        public void Tick(object sender, EventArgs e)
-        {
-            foreach (Checkout checkout in scene.LstCheckout)
-            {
-                if (checkout.IsOpen && !checkout.IsFull)
+                if (!IsInCheckout)
                 {
-                    if (!IsInCheckout)
-                    {
-                        checkout.AddClientToQueue(this);
-                    }
+                    e.Graphics.DrawString(timePurchase.ToString(), new Font("arial", 11F), Brushes.Black, (float)Location.X, (float)Location.Y);
                 }
             }
-            if (actualPosition.Y > futurPosition.Y && actualPosition.X>futurPosition.X)
+
+        }
+        public void Tick(object sender, EventArgs e)
+        {
+            if (actualPosition.Y > futurPosition.Y && actualPosition.Y < futurPosition.Y + size.Height && actualPosition.X < futurPosition.X + (size.Width / 2))
             {
                 Stop();
-                Console.WriteLine("Test"+cpt.ToString());
-                cpt++;
+            }
+            switch (status)
+            {
+                case ClientStatus.Walking:
+                    color = Color.White;
+                    break;
+                case ClientStatus.WaitingQueue:
+                    color = Color.Red;
+                    break;
+                case ClientStatus.InQueue:
+                    color = Color.Yellow;
+                    break;
+                default:
+                    break;
             }
 
         }
-        
+
 
 
     }

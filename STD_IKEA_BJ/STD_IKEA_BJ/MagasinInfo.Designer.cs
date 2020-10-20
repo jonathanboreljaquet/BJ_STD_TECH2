@@ -28,20 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblTimeCheckoutVerifier = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lblNbrCheckoutOpen = new System.Windows.Forms.Label();
             this.lblTimeBeforeOpenCheckout = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lblNumberOfClientsInShop = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // label1
+            // lblTimeCheckoutVerifier
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(87, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Caisses ouvertes";
+            this.lblTimeCheckoutVerifier.AutoSize = true;
+            this.lblTimeCheckoutVerifier.Location = new System.Drawing.Point(3, 16);
+            this.lblTimeCheckoutVerifier.Name = "lblTimeCheckoutVerifier";
+            this.lblTimeCheckoutVerifier.Size = new System.Drawing.Size(87, 13);
+            this.lblTimeCheckoutVerifier.TabIndex = 0;
+            this.lblTimeCheckoutVerifier.Text = "Caisses ouvertes";
             // 
             // label2
             // 
@@ -70,14 +72,34 @@
             this.lblTimeBeforeOpenCheckout.TabIndex = 4;
             this.lblTimeBeforeOpenCheckout.Text = "-";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 64);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(171, 13);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Nombre de clients dans le magasin";
+            // 
+            // lblNumberOfClientsInShop
+            // 
+            this.lblNumberOfClientsInShop.AutoSize = true;
+            this.lblNumberOfClientsInShop.Location = new System.Drawing.Point(180, 64);
+            this.lblNumberOfClientsInShop.Name = "lblNumberOfClientsInShop";
+            this.lblNumberOfClientsInShop.Size = new System.Drawing.Size(10, 13);
+            this.lblNumberOfClientsInShop.TabIndex = 6;
+            this.lblNumberOfClientsInShop.Text = "-";
+            // 
             // MagasinInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblNumberOfClientsInShop);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.lblTimeBeforeOpenCheckout);
             this.Controls.Add(this.lblNbrCheckoutOpen);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblTimeCheckoutVerifier);
             this.Name = "MagasinInfo";
             this.Size = new System.Drawing.Size(220, 150);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.MagasinInfo_Paint);
@@ -88,9 +110,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblTimeCheckoutVerifier;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblNbrCheckoutOpen;
         private System.Windows.Forms.Label lblTimeBeforeOpenCheckout;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblNumberOfClientsInShop;
     }
 }

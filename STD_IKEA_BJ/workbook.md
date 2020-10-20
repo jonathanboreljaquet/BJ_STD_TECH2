@@ -17,3 +17,7 @@
 * Déplacement des clients dans la file d'attente
 * Désaffichage des clients une fois pris en charge 
 * Création des constantes de la scene
+## 20.10.2020
+* Création d'une nouvelle caisse si il y a encore des clients qui ont pas été pris en charge
+* Timer sur client avant qu'ils aient besoin de passer en caisse
+* Statut du client (Walking,WaitingQueue,InQueue)

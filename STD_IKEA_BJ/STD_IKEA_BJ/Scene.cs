@@ -24,17 +24,20 @@ namespace STD_IKEA_BJ
         private const int CLIENT_HEIGHT = 40;
         private const int CLIENT_START_POSITION_X = 0;
         private const int CLIENT_START_POSITION_Y = 0;
-        private const int MAX_CLIENT_IN_SHOP = 7;
+        private const int MAX_CLIENT_IN_SHOP = 20;
         private Bitmap bitmap = null;
         private Graphics graphics = null;
-        private Timer timerShop;
+        private Timer timerDisplay;
         private Timer timerSpawnClient;
+        private Timer timerCheckoutVerifier;
+        private int timeCheckoutVerifier;
         private Checkout checkout;
+        private Client client;
         private Random random;
-        private int nbrClient = 0;
 
         internal List<Checkout> LstCheckout { get; private set; }
         internal List<Client> LstClient { get; private set; }
+        public int TimeCheckoutVerifier { get => timeCheckoutVerifier; set => timeCheckoutVerifier = value; }
 
         public Scene() : base()
         {
@@ -42,18 +45,24 @@ namespace STD_IKEA_BJ
             LstClient = new List<Client>();
             random = new Random();
             DoubleBuffered = true;
-            timerShop = new Timer
+            timerDisplay = new Timer
             {
                 Interval = 1000 / FPS,
                 Enabled = true
             };
-            timerShop.Tick += Shop_Tick;
+            timerDisplay.Tick += Display_Tick;
             timerSpawnClient = new Timer
             {
                 Interval = 1000,
                 Enabled = true
             };
             timerSpawnClient.Tick += SpawnClient_Tick;
+            timerCheckoutVerifier = new Timer
+            {
+                Interval = 1000,
+                Enabled = true
+            };
+            timerCheckoutVerifier.Tick += CheckoutVerifier_Tick;
             int x = 50;
             for (int i = 0; i < NUMBER_OF_CHECKOUT; i++)
             {
@@ -61,31 +70,43 @@ namespace STD_IKEA_BJ
                 Vector2 position = new Vector2(x, CHECKOUT_POSITION_Y);
                 checkout = new Checkout(position, size, this);
                 Paint += checkout.Paint;
-                timerShop.Tick += checkout.Tick;
+                timerDisplay.Tick += checkout.Tick;
                 LstCheckout.Add(checkout);
                 x += DISTANCE_BETWEEN_BOXES;
             }
-            LstCheckout[0].OpenCheckout();
+            timeCheckoutVerifier = 15;
         }
-
-        private void Shop_Tick(object sender, EventArgs e)
+        private void Display_Tick(object sender, EventArgs e)
         {
             Invalidate();
         }
         private void SpawnClient_Tick(object sender, EventArgs e)
         {
-            if (nbrClient < 2)
+            if (LstClient.Count < MAX_CLIENT_IN_SHOP)
             {
                 Vector2 position = new Vector2(CLIENT_START_POSITION_X, CLIENT_START_POSITION_Y);
                 Vector2 speed = new Vector2(random.Next(50, 150), random.Next(50, 150));
-                Size size = new Size(CLIENT_WIDTH,CLIENT_HEIGHT);
-                Client client = new Client(position, new Vector2(), speed, Color.White, size, this);
+                Size size = new Size(CLIENT_WIDTH, CLIENT_HEIGHT);
+                client = new Client(position, new Vector2(1000, 1000), speed, size, this);
                 Paint += client.Paint;
-                timerShop.Tick += client.Tick;
+                timerDisplay.Tick += client.Tick;
                 LstClient.Add(client);
-                nbrClient++;
             }
 
+        }
+        private void CheckoutVerifier_Tick(object sender, EventArgs e)
+        {
+            timeCheckoutVerifier -= 1;
+            if (timeCheckoutVerifier == 0)
+            {
+                var clientsInCheckout = LstClient.Count(client => client.IsInCheckout == false);
+                if (clientsInCheckout > 0)
+                {
+                    var index = LstCheckout.TakeWhile(checkout => checkout.IsOpen).Count();
+                    LstCheckout[index].OpenCheckout();
+                }
+                timeCheckoutVerifier = 15;
+            }
         }
 
         protected override void OnPaint(PaintEventArgs e)
