@@ -43,10 +43,10 @@
             // 
             // magasinInfo1
             // 
-            this.magasinInfo1.Location = new System.Drawing.Point(726, 424);
+            this.magasinInfo1.Location = new System.Drawing.Point(732, 434);
             this.magasinInfo1.Name = "magasinInfo1";
             this.magasinInfo1.Scene = this.scene1;
-            this.magasinInfo1.Size = new System.Drawing.Size(220, 150);
+            this.magasinInfo1.Size = new System.Drawing.Size(214, 140);
             this.magasinInfo1.TabIndex = 1;
             // 
             // frmIkea

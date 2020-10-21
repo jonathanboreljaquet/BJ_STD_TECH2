@@ -21,3 +21,6 @@
 * Création d'une nouvelle caisse si il y a encore des clients qui ont pas été pris en charge
 * Timer sur client avant qu'ils aient besoin de passer en caisse
 * Statut du client (Walking,WaitingQueue,InQueue)
+## 21.10.2020
+* Patch des statuts des clients
+* Ajout de commentaire sur tout le projet

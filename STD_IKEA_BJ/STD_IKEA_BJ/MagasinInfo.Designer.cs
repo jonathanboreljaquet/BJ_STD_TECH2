@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lblTimeCheckoutVerifier = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lblNbrCheckoutOpen = new System.Windows.Forms.Label();
             this.lblTimeBeforeOpenCheckout = new System.Windows.Forms.Label();
@@ -36,23 +36,23 @@
             this.lblNumberOfClientsInShop = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // lblTimeCheckoutVerifier
+            // label1
             // 
-            this.lblTimeCheckoutVerifier.AutoSize = true;
-            this.lblTimeCheckoutVerifier.Location = new System.Drawing.Point(3, 16);
-            this.lblTimeCheckoutVerifier.Name = "lblTimeCheckoutVerifier";
-            this.lblTimeCheckoutVerifier.Size = new System.Drawing.Size(87, 13);
-            this.lblTimeCheckoutVerifier.TabIndex = 0;
-            this.lblTimeCheckoutVerifier.Text = "Caisses ouvertes";
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 16);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(87, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Caisses ouvertes";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 41);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(117, 13);
+            this.label2.Size = new System.Drawing.Size(179, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Temps avant ouverture";
+            this.label2.Text = "Temps avant vérification d\'ouverture";
             // 
             // lblNbrCheckoutOpen
             // 
@@ -66,7 +66,7 @@
             // lblTimeBeforeOpenCheckout
             // 
             this.lblTimeBeforeOpenCheckout.AutoSize = true;
-            this.lblTimeBeforeOpenCheckout.Location = new System.Drawing.Point(126, 41);
+            this.lblTimeBeforeOpenCheckout.Location = new System.Drawing.Point(188, 41);
             this.lblTimeBeforeOpenCheckout.Name = "lblTimeBeforeOpenCheckout";
             this.lblTimeBeforeOpenCheckout.Size = new System.Drawing.Size(10, 13);
             this.lblTimeBeforeOpenCheckout.TabIndex = 4;
@@ -99,9 +99,9 @@
             this.Controls.Add(this.lblTimeBeforeOpenCheckout);
             this.Controls.Add(this.lblNbrCheckoutOpen);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.lblTimeCheckoutVerifier);
+            this.Controls.Add(this.label1);
             this.Name = "MagasinInfo";
-            this.Size = new System.Drawing.Size(220, 150);
+            this.Size = new System.Drawing.Size(228, 150);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.MagasinInfo_Paint);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -110,7 +110,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label lblTimeCheckoutVerifier;
+        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblNbrCheckoutOpen;
         private System.Windows.Forms.Label lblTimeBeforeOpenCheckout;

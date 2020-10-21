@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* Author : Jonathan Borel-Jaquet
+ * Date : 21/10/20
+ * Description : Class Scene representing a store 
+ */
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
@@ -14,8 +18,8 @@ namespace STD_IKEA_BJ
         private Vector2 position;
         private Size size;
         private float actualQueuePositionY;
-        private Scene scene;
-        private Timer timer;
+        private readonly Scene scene;
+        private readonly Timer timerProcessing;
         private int timeBeforeProcess;
         private string label;
         private Color color;
@@ -26,22 +30,26 @@ namespace STD_IKEA_BJ
         public Checkout(Vector2 position,Size size, Scene scene)
         {
             LstClient = new List<Client>();
-            timer = new Timer
+            timerProcessing = new Timer
             {
                 Interval = 1000,
                 Enabled = true
             };
-            timer.Tick += T_Tick;
+            timerProcessing.Tick += Processing_Tick;
             this.position = position;
             this.size = size;
             this.actualQueuePositionY = position.Y;
             this.scene = scene;
-            label = "-";
+            label = "close";
             color = Color.Red;
             timeBeforeProcess = START_TIME_BEFORE_PROCESS;
         }
-
-        private void T_Tick(object sender, EventArgs e)
+        /// <summary>
+        /// Tick to process a client 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Processing_Tick(object sender, EventArgs e)
         {
             if (IsOpen)
             {
@@ -54,23 +62,30 @@ namespace STD_IKEA_BJ
                 label = timeBeforeProcess.ToString();
             }
         }
+        /// <summary>
+        /// Method for open the checkout
+        /// </summary>
         public void OpenCheckout()
         {
             color = Color.Green;
             IsOpen = true;
         }
+        /// <summary>
+        /// Method for add a client in the checkout
+        /// </summary>
+        /// <param name="client"></param>
         public void AddClientToQueue(Client client)
         {
             if (LstClient.Count < MAX_NUMBER_OF_CLIENT)
             {
                 LstClient.Add(client);
             }
-            else
-            {
-                IsFull = true;
-            }
+            IsFull = (LstClient.Count==MAX_NUMBER_OF_CLIENT);
 
         }
+        /// <summary>
+        /// Method to remove the supported client and have the queue moved
+        /// </summary>
         public void RemoveFirstClient()
         {
             actualQueuePositionY = position.Y;
@@ -87,6 +102,11 @@ namespace STD_IKEA_BJ
                 IsFull = false;
             }
         }
+        /// <summary>
+        /// Tick to add a client to the queue
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void Tick(object sender, EventArgs e)
         {
             foreach (Client client in LstClient)
@@ -99,7 +119,11 @@ namespace STD_IKEA_BJ
                 }
             }
         }
-
+        /// <summary>
+        /// Checkout Paint method used by the OnPaint of the Scene
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.FillRectangle(new SolidBrush(color), new Rectangle(Point.Round(position.ToPointF()), size));
