@@ -3,6 +3,7 @@
  * Description : Class Scene representing a store 
  */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -14,20 +15,28 @@ namespace STD_IKEA_BJ
 {
     public class Scene : Control
     {
-        //Constant configuration
+        //Display configuration
         private const int FPS = 120;
+        
+        //Checkout configuration
         private const int NUMBER_OF_CHECKOUT = 10;
         private const int CHECKOUT_POSITION_Y = 500;
         private const int DISTANCE_BETWEEN_BOXES = 60;
         private const int CHECKOUT_WIDTH = 50;
         private const int CHECKOUT_HEIGHT = 50;
+        private const int CHECKOUT_FIRST_POSITION_X = 50;
+        private const int CHECKOUT_TIME_VERIFIER = 15;
+        
+        //Client configuration
         private const int CLIENT_WIDTH = 40;
         private const int CLIENT_HEIGHT = 40;
         private const int CLIENT_START_POSITION_X = 0;
         private const int CLIENT_START_POSITION_Y = 0;
         private const int MAX_CLIENT_IN_SHOP = 20;
-        private const int CHECKOUT_FIRST_POSITION_X = 50;
-        private const int CHECKOUT_TIME_VERIFIER = 15;
+        private const int MINIMUM_SPEED_X_CLIENT = 50;
+        private const int MAXIMUM_SPEED_X_CLIENT = 150;
+        private const int MINIMUM_SPEED_Y_CLIENT = 50;
+        private const int MAXIMUM_SPEED_Y_CLIENT = 50;
 
         private Bitmap bitmap = null;
         private Graphics graphics = null;
@@ -37,13 +46,13 @@ namespace STD_IKEA_BJ
         private readonly Random random;
 
         internal List<Checkout> LstCheckout { get; private set; }
-        internal List<Client> LstClient { get; private set; }
+        internal Queue<Client> ClientQueue { get; private set; }
         public int TimeCheckoutVerifier { get; private set; }
 
         public Scene() : base()
         {
             LstCheckout = new List<Checkout>();
-            LstClient = new List<Client>();
+            ClientQueue = new Queue<Client>();
             random = new Random();
             DoubleBuffered = true;
             timerDisplay = new Timer
@@ -94,15 +103,15 @@ namespace STD_IKEA_BJ
         /// <param name="e"></param>
         private void SpawnClient_Tick(object sender, EventArgs e)
         {
-            if (LstClient.Count < MAX_CLIENT_IN_SHOP)
+            if (ClientQueue.Count < MAX_CLIENT_IN_SHOP)
             {
                 Vector2 position = new Vector2(CLIENT_START_POSITION_X, CLIENT_START_POSITION_Y);
-                Vector2 speed = new Vector2(random.Next(50, 150), random.Next(50, 150));
+                Vector2 speed = new Vector2(random.Next(MINIMUM_SPEED_X_CLIENT, MAXIMUM_SPEED_X_CLIENT), random.Next(MINIMUM_SPEED_Y_CLIENT, MAXIMUM_SPEED_Y_CLIENT));
                 Size size = new Size(CLIENT_WIDTH, CLIENT_HEIGHT);
                 Client client = new Client(position, new Vector2(1000, 1000), speed, size, this);
                 Paint += client.Paint;
                 timerDisplay.Tick += client.Tick;
-                LstClient.Add(client);
+                ClientQueue.Enqueue(client);
             }
 
         }
@@ -116,11 +125,11 @@ namespace STD_IKEA_BJ
             TimeCheckoutVerifier -= 1;
             if (TimeCheckoutVerifier == 0)
             {
-                var clientsInCheckout = LstClient.Count(client => client.Status == Client.ClientStatus.WaitingQueue);
+                var clientsInCheckout = ClientQueue.Count(client => client.Status == Client.ClientStatus.WaitingQueue);
                 if (clientsInCheckout > 0)
                 {
                     var index = LstCheckout.TakeWhile(checkout => checkout.IsOpen).Count();
-                    LstCheckout[index].OpenCheckout();
+                    LstCheckout[Math.Min(index,LstCheckout.Count)].OpenCheckout();
                 }
                 TimeCheckoutVerifier = CHECKOUT_TIME_VERIFIER;
             }

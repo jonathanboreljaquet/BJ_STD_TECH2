@@ -64,7 +64,6 @@
     <Compile Include="MagasinInfo.Designer.cs">
       <DependentUpon>MagasinInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Parameter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scene.cs">
@@ -89,6 +88,8 @@
     <EmbeddedResource Include="Scene.resx">
       <DependentUpon>Scene.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="ClassDiagramIKEA.cd" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -101,6 +102,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.Unstable.1.2.0.205\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

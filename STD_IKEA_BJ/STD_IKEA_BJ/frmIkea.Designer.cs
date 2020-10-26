@@ -43,6 +43,7 @@
             // 
             // magasinInfo1
             // 
+            this.magasinInfo1.BackColor = System.Drawing.Color.White;
             this.magasinInfo1.Location = new System.Drawing.Point(732, 434);
             this.magasinInfo1.Name = "magasinInfo1";
             this.magasinInfo1.Scene = this.scene1;

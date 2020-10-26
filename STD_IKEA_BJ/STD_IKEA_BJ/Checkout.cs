@@ -3,6 +3,7 @@
  * Description : Class Scene representing a store 
  */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
@@ -13,8 +14,9 @@ namespace STD_IKEA_BJ
 
     class Checkout
     {
-        const int MAX_NUMBER_OF_CLIENT = 5;
-        private const int START_TIME_BEFORE_PROCESS = 10;
+        private const int MAX_NUMBER_OF_CLIENT_IN_CHECKOUT = 5;
+        private const int START_TIME_BEFORE_PROCESS = 8;
+
         private Vector2 position;
         private Size size;
         private float actualQueuePositionY;
@@ -25,11 +27,11 @@ namespace STD_IKEA_BJ
         private Color color;
         public bool IsOpen { get; private set; }
         public bool IsFull { get; private set; }
-        internal List<Client> LstClient { get; private set; }
+        internal Queue<Client> ClientQueue { get; private set; }
 
-        public Checkout(Vector2 position,Size size, Scene scene)
+        public Checkout(Vector2 position, Size size, Scene scene)
         {
-            LstClient = new List<Client>();
+            ClientQueue = new Queue<Client>();
             timerProcessing = new Timer
             {
                 Interval = 1000,
@@ -63,7 +65,7 @@ namespace STD_IKEA_BJ
             }
         }
         /// <summary>
-        /// Method for open the checkout
+        /// Opens the checkout.
         /// </summary>
         public void OpenCheckout()
         {
@@ -71,36 +73,50 @@ namespace STD_IKEA_BJ
             IsOpen = true;
         }
         /// <summary>
-        /// Method for add a client in the checkout
+        /// Closes the checkout
+        /// </summary>
+        public void CloseCheckout()
+        {
+            color = Color.Red;
+            IsOpen = false;
+        }
+        /// <summary>
+        /// Adds a client in the checkout
         /// </summary>
         /// <param name="client"></param>
         public void AddClientToQueue(Client client)
         {
-            if (LstClient.Count < MAX_NUMBER_OF_CLIENT)
+            if (ClientQueue.Count < MAX_NUMBER_OF_CLIENT_IN_CHECKOUT)
             {
-                LstClient.Add(client);
+                ClientQueue.Enqueue(client);
             }
-            IsFull = (LstClient.Count==MAX_NUMBER_OF_CLIENT);
+            IsFull = (ClientQueue.Count == MAX_NUMBER_OF_CLIENT_IN_CHECKOUT);
 
         }
         /// <summary>
-        /// Method to remove the supported client and have the queue moved
+        /// Removes the supported client and have the queue moved
         /// </summary>
         public void RemoveFirstClient()
         {
-            actualQueuePositionY = position.Y;
-            LstClient[0].IsPainting = false;
-            LstClient[0] = null;
-            scene.LstClient[0] = null;
-            scene.LstClient.Remove(LstClient[0]);
-            LstClient.Remove(LstClient[0]);
-            foreach (Client client in LstClient)
+            if (ClientQueue.Count != 0)
             {
-                Vector2 queuePosition = new Vector2(position.X, actualQueuePositionY);
-                client.Move(queuePosition);
-                actualQueuePositionY -= client.Size.Height;
-                IsFull = false;
+                Client removecClient = ClientQueue.Peek();
+                removecClient.IsPainting = false;
+                scene.ClientQueue.Dequeue();
+                ClientQueue.Dequeue();
+                actualQueuePositionY = position.Y;
+                foreach (Client client in ClientQueue)
+                {
+                    Vector2 queuePosition = new Vector2(position.X, actualQueuePositionY);
+                    client.Move(queuePosition);
+                    actualQueuePositionY -= client.Size.Height;
+                    IsFull = false;
+                }
             }
+            else
+            {
+                CloseCheckout();
+            }        
         }
         /// <summary>
         /// Tick to add a client to the queue
@@ -109,7 +125,7 @@ namespace STD_IKEA_BJ
         /// <param name="e"></param>
         public void Tick(object sender, EventArgs e)
         {
-            foreach (Client client in LstClient)
+            foreach (Client client in ClientQueue)
             {
                 if (!client.IsInCheckout)
                 {
@@ -120,7 +136,7 @@ namespace STD_IKEA_BJ
             }
         }
         /// <summary>
-        /// Checkout Paint method used by the OnPaint of the Scene
+        /// Paints the checkout
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

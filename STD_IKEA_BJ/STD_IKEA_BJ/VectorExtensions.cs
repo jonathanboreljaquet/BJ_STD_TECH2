@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* Author : Jonathan Borel-Jaquet
+ * Date : 21/10/20
+ * Description : Class VectorExtensions
+ */
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,9 +14,14 @@ namespace STD_IKEA_BJ
 {
     public static class VectorExtensions
     {
-        public static PointF ToPointF(this Vector2 vector2)
+        /// <summary>
+        /// Method to convert a Vector2 to PointF
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns>PointF with the same value as the Vector2</returns>
+        public static PointF ToPointF(this Vector2 vector)
         {
-            return new PointF(vector2.X, vector2.Y);
+            return new PointF(vector.X, vector.Y);
         }
     }
 

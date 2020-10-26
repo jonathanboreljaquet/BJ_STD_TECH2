@@ -41,7 +41,7 @@ namespace STD_IKEA_BJ
             {
                 lblNbrCheckoutOpen.Text = Scene.LstCheckout.Count(n => n.IsOpen == true).ToString()+"/"+Scene.LstCheckout.Count.ToString() ;
                 lblTimeBeforeOpenCheckout.Text = Scene.TimeCheckoutVerifier.ToString();
-                lblNumberOfClientsInShop.Text = Scene.LstClient.Count.ToString();
+                lblNumberOfClientsInShop.Text = Scene.ClientQueue.Count.ToString();
             }
         }
     }

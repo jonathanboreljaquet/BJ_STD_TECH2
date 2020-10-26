@@ -12,6 +12,9 @@ namespace STD_IKEA_BJ
 {
     class Client
     {
+        private const int MINIMUM_CLIENT_TIME_BEFORE_PURCHASE = 10;
+        private const int MAXIMUM_CLIENT_TIME_BEFORE_PURCHASE = 30;
+
         private Vector2 startPosition;
         private Vector2 actualPosition;
         private Vector2 futurPosition;
@@ -19,11 +22,12 @@ namespace STD_IKEA_BJ
         private Color color;
         private Scene scene;
         private Size size;
-        private readonly Stopwatch sw;
         private bool isColliding;
-        private Timer timerPurchase;
         private int timePurchase;
-        private Random rdm;
+
+        private readonly Timer timerPurchase;
+        private readonly Random rdm;
+        private readonly Stopwatch sw;
 
         public bool IsInCheckout { get; private set; }
         public bool IsPainting { get; set; }
@@ -79,7 +83,7 @@ namespace STD_IKEA_BJ
             };
             timerPurchase.Tick += BuyingTime_Tick;
             rdm = new Random();
-            timePurchase = rdm.Next(10, 30);
+            timePurchase = rdm.Next(MINIMUM_CLIENT_TIME_BEFORE_PURCHASE, MAXIMUM_CLIENT_TIME_BEFORE_PURCHASE);
             Status = ClientStatus.Walking;
         }
         /// <summary>
@@ -103,6 +107,7 @@ namespace STD_IKEA_BJ
                         {
                             this.Status = ClientStatus.InQueue;
                             checkout.AddClientToQueue(this);
+                            return;
                         }
                     }
                 }
@@ -111,7 +116,7 @@ namespace STD_IKEA_BJ
 
         }
         /// <summary>
-        /// Method to move the client to a desired destination
+        /// Moves the client to a desired destination
         /// </summary>
         /// <param name="destination"></param>
         public void Move(Vector2 destination)
@@ -125,7 +130,7 @@ namespace STD_IKEA_BJ
             sw.Restart();
         }
         /// <summary>
-        /// Method to stop the client's movement
+        /// Stops the client's movement
         /// </summary>
         public void Stop()
         {
@@ -143,7 +148,7 @@ namespace STD_IKEA_BJ
             if (IsPainting)
             {
                 e.Graphics.FillEllipse(new SolidBrush(color), new Rectangle(Point.Round(Location.ToPointF()), size));
-                if (!IsInCheckout)
+                if (Status == ClientStatus.Walking)
                 {
                     e.Graphics.DrawString(timePurchase.ToString(), new Font("arial", 11F), Brushes.Black, (float)Location.X, (float)Location.Y);
                 }
@@ -157,7 +162,9 @@ namespace STD_IKEA_BJ
         /// <param name="e"></param>
         public void Tick(object sender, EventArgs e)
         {
-            if (actualPosition.Y > futurPosition.Y && actualPosition.Y < futurPosition.Y + (size.Height / 2) && actualPosition.X < futurPosition.X + (size.Width / 2))
+            if ((actualPosition.Y > futurPosition.Y) &&
+                (actualPosition.Y < futurPosition.Y + (size.Height / 2)) &&
+                (actualPosition.X < futurPosition.X + (size.Width / 2)))
             {
                 Stop();
             }

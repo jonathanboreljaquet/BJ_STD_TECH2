@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="STD_IKEA_BJ.Checkout">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAABAAAABAAQIAgJJAgAAAAAACIIAAAAAhIQQA=</HashCode>
+      <FileName>Checkout.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="STD_IKEA_BJ.Client">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="STD_IKEA_BJ.Client.ClientStatus" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Client.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AgAACAgEAIACgBAAAIIAAIAAGAAAIYGAIAAAAAIIQBA=</HashCode>
+      <FileName>Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="STD_IKEA_BJ.MagasinInfo">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAgACAAABAAgCCAAAACAAAAAAAAAAAKAAAEAAA=</HashCode>
+      <FileName>MagasinInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="STD_IKEA_BJ.Scene">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACSgIAgIAAAYBAAADAABAQYAAAQAIgAAAQCAABAEAQ=</HashCode>
+      <FileName>Scene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="STD_IKEA_BJ.VectorExtensions">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>VectorExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

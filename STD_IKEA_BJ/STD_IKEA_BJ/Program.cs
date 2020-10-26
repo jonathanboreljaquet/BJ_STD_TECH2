@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿/* Author : Jonathan Borel-Jaquet
+ * Date : 21/10/20
+ * Description : Program.cs file
+ */
+using System;
 using System.Windows.Forms;
 
 namespace STD_IKEA_BJ
