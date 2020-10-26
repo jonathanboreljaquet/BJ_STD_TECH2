@@ -24,3 +24,5 @@
 ## 21.10.2020
 * Patch des statuts des clients
 * Ajout de commentaire sur tout le projet
+## 26.10.2020
+* Tentative de patch la dispariton des client en modifiant les List en Queue
